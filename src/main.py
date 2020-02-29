@@ -46,15 +46,25 @@ def plot_task(task):
     plt.tight_layout()
     plt.show()
 
-    # num_test = len(task['test'])
-    # fig, axs = plt.subplots(2, num_test, figsize=(3 * num_test, 3 * 2))
-    # if num_test == 1:
-    #     plot_one(axs[0], 0, 'test', 'input')
-    #     plot_one(axs[1], 0, 'test', 'output')
+    # number_of_test_examples = len(task['test'])
+    # fig, axes_array = plt.subplots(2, number_of_test_examples, figsize=(3 * number_of_test_examples, 3 * 2))
+    # if number_of_test_examples == 1:
+    #     input_axis = axes_array[0]
+    #     input_matrix = task['test'][0]['input']
+    #     plot_grid(input_axis, input_matrix, 'test input')
+    #
+    #     output_axis = axes_array[1]
+    #     output_matrix = task['test'][0]['output']
+    #     plot_grid(output_axis, output_matrix, 'test output')
     # else:
-    #     for task_number in range(num_test):
-    #         plot_one(axs[0, task_number], task_number, 'test', 'input')
-    #         plot_one(axs[1, task_number], task_number, 'test', 'output')
+    #     for task_number in range(number_of_test_examples):
+    #         input_axis = axes_array[0, task_number]
+    #         input_matrix = task['test'][task_number]['input']
+    #         plot_grid(input_axis, input_matrix, 'test input')
+    #
+    #         output_axis = axes_array[1, task_number]
+    #         output_matrix = task['test'][task_number]['output']
+    #         plot_grid(output_axis, output_matrix, 'test output')
     # plt.tight_layout()
     # plt.show()
 
