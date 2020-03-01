@@ -1,12 +1,10 @@
 import unittest
 
-import sys
-sys.path.append('../../src')
 
-from Grid import Grid
+from src.Grid import Grid
 
 
-class MyTestCase(unittest.TestCase):
+class TestObjectDetection(unittest.TestCase):
     def test_getting_neighbourhoods(self):
         g = [[0, 0, 0, 0, 0, 0], [0, 0, 3, 0, 0, 0], [0, 3, 0, 3, 0, 0], [0, 0, 3, 0, 3, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 0, 0]]
 
@@ -44,6 +42,90 @@ class MyTestCase(unittest.TestCase):
                 (2, 2),
             ],
             grid.get_neighbourhood(1, 1)
+        )
+
+    def test_getting_spatially_continuous_objects(self):
+        g = [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 3, 0, 0, 0],
+            [0, 3, 0, 3, 0, 0],
+            [0, 0, 3, 0, 3, 0],
+            [0, 0, 0, 3, 0, 0],
+            [0, 0, 0, 0, 0, 0]
+        ]
+
+        grid = Grid(g)
+
+        spatially_continuous_objects = grid.parse_objects()
+        self.assertEqual(
+            1,
+            len(spatially_continuous_objects)
+        )
+
+    def test_getting_colour_continuous_objects(self):
+        g = [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0],
+            [0, 1, 0, 3, 0, 0],
+            [0, 0, 3, 0, 3, 0],
+            [0, 0, 0, 3, 0, 0],
+            [0, 0, 0, 0, 0, 0]
+        ]
+
+        grid = Grid(g)
+
+        colour_continuous_objects = grid.parse_objects()
+        self.assertEqual(
+            2,
+            len(colour_continuous_objects)
+        )
+
+        g = [
+            [0, 1, 1, 0, 0, 0],
+            [0, 1, 1, 0, 0, 0],
+            [0, 1, 3, 3, 3, 0],
+            [0, 0, 2, 2, 3, 0],
+            [0, 0, 0, 3, 3, 0],
+            [0, 0, 0, 0, 0, 0],
+        ]
+
+        grid = Grid(g)
+        colour_continuous_objects = grid.parse_objects()
+
+        self.assertEqual(
+            3,
+            len(colour_continuous_objects)
+        )
+
+    def test_getting_many_colour_and_spatially_objects_in_a_small_grid(self):
+        g = [
+            [9, 0, 9, 0, 9, 9],
+        ]
+
+        grid = Grid(g)
+
+        colour_continuous_objects = grid.parse_objects()
+        self.assertEqual(
+            3,
+            len(colour_continuous_objects)
+        )
+
+    def test_getting_many_colour_and_spatially_objects_in_a_small_vertical_grid(self):
+        g = [
+            [8, 7],
+            [7, 7],
+            [0, 0],
+            [0, 0],
+            [8, 0],
+            [8, 0],
+        ]
+
+        grid = Grid(g)
+
+        colour_continuous_objects = grid.parse_objects()
+        self.assertEqual(
+            3,
+            len(colour_continuous_objects)
         )
 
 
