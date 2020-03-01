@@ -31,10 +31,12 @@ class Grid:
 
         axes.imshow(self.grid, cmap = colour_map, norm = norm)
         axes.grid(True, which = 'both', color = 'lightgrey', linewidth = 0.5)
-        axes.set_yticks([x - 0.5 for x in range(1 + self.number_of_rows)])
         axes.set_xticks([x - 0.5 for x in range(1 + self.number_of_columns)])
-        axes.set_xticklabels([])
-        axes.set_yticklabels([])
+        axes.set_xticklabels([x for x in range(self.number_of_columns)])
+        axes.set_xticklabels([x for x in range(self.number_of_columns)])
+
+        axes.set_yticks([x - 0.5 for x in range(1 + self.number_of_rows)])
+        axes.set_yticklabels([y for y in range(self.number_of_rows)])
         if len(self.title) > 0:
             axes.set_title(self.title)
 

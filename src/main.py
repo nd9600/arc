@@ -82,7 +82,7 @@ def main():
         g = task_json["train"][0]["input"]
         print(training_tasks[i])
 
-        grid = Grid(g)
+        # grid = Grid(g)
         # plot_task(task_json)
 
 
