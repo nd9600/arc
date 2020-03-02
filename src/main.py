@@ -62,7 +62,7 @@ def plot_task(task):
 
 
 def main():
-    root_path = Path("../")
+    root_path = Path(Path(__file__).parent.parent.absolute())
     data_path = root_path / "data"
 
     training_path = data_path / 'training'
@@ -82,8 +82,8 @@ def main():
         g = task_json["train"][0]["input"]
         print(training_tasks[i])
 
-        # grid = Grid(g)
-        # plot_task(task_json)
+        grid = Grid(g)
+        plot_task(task_json)
 
 
 if __name__== "__main__":
