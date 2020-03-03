@@ -76,8 +76,15 @@ class Object:
             top_left_offset: AbsolutePosition,
             relative_positions: List[RelativePosition]
     ) -> List[AbsolutePosition]:
+        def make_absolute_position(relative_position: RelativePosition):
+            absolute_position = (top_left_offset[0] + relative_position[0], top_left_offset[1] + relative_position[1])
+            if absolute_position[0] < 0:
+                raise OverflowError(f"absolute x position can't be negative, {top_left_offset[0]} + {relative_position[0]}")
+            if absolute_position[1] < 0:
+                raise OverflowError(f"absolute y position can't be negative, {top_left_offset[1]} + {relative_position[1]}")
+            return absolute_position
         return list(map(
-            lambda relative_position: (top_left_offset[0] + relative_position[0], top_left_offset[1] + relative_position[1]),
+            make_absolute_position,
             relative_positions
         ))
 

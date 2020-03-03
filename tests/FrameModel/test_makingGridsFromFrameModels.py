@@ -1,5 +1,6 @@
 import unittest
 
+from FrameModel.Object import Object
 from src.FrameModel.FrameModel import FrameModel
 from src.Grid.Grid import Grid
 
@@ -18,8 +19,8 @@ class TestMakingGridsFromFrameModels(unittest.TestCase):
         frame_model = FrameModel.create_from_grid(grid)
         grid2 = frame_model.to_grid()
         self.assertSequenceEqual(
-            grid.grid,
-            grid2.grid
+            grid.grid_array,
+            grid2.grid_array
         )
 
     def test_making_grid_from_frame_model_with_four_objects(self):
@@ -35,8 +36,49 @@ class TestMakingGridsFromFrameModels(unittest.TestCase):
         frame_model = FrameModel.create_from_grid(grid)
         grid2 = frame_model.to_grid()
         self.assertSequenceEqual(
-            grid.grid,
-            grid2.grid
+            grid.grid_array,
+            grid2.grid_array
+        )
+
+    def test_making_grid_from_frame_model_with_an_occluded_object(self):
+        frame_model = FrameModel(
+            3,
+            3,
+            0,
+            [
+                Object(
+                    1,
+                    (0, 0),
+                    [
+                        (0, 0),
+                        (1, 0),
+                        (0, 1),
+                        (1, 1),
+                    ],
+                    0
+                ),
+                Object(
+                    2,
+                    (1, 1),
+                    [
+                        (0, 0),
+                        (1, 0),
+                        (0, 1),
+                        (1, 1),
+                    ],
+                    -1
+                )
+            ],
+            []
+        )
+        grid = frame_model.to_grid()
+        self.assertSequenceEqual(
+            [
+                [1, 1, 0],
+                [1, 1, 2],
+                [0, 2, 2],
+            ],
+            grid.grid_array
         )
 
 

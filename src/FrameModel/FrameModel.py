@@ -1,11 +1,14 @@
 from typing import List
 
+import numpy as np
+
+from collections import defaultdict
+
 from src.FrameModel.Object import Object
 from src.Grid.Grid import Grid
 
-import numpy as np
-
 from src.Types import Row
+
 
 
 class FrameModel:
@@ -34,21 +37,31 @@ class FrameModel:
         )
 
     def to_grid(self) -> Grid:
-        empty_grid: List[Row] = np.full(
+        # noinspection PyTypeChecker
+        empty_grid_array: List[Row] = np.full(
             [
                 self.number_of_rows,
                 self.number_of_columns,
             ],
             self.background_colour
         ).tolist()
-        object_depths = []  # todo: take object depth into account
 
-        grid = empty_grid
+        # find lowest depth, then colour all objects that have that depth, then all objects for depth above, etc.
+        objects_by_depth = defaultdict(list)
         for obj in self.objects:
-            absolute_positions = Object.convert_to_absolute_positions(obj.top_left_offset, obj.relative_positions)
-            for absolute_position in absolute_positions:
-                grid[absolute_position[1]][absolute_position[0]] = obj.colour  # todo: use grid.set_colour
-        return Grid(grid)
+            objects_by_depth[obj.depth].append(obj)
+
+        ascending_depths = list(objects_by_depth.keys())
+        ascending_depths.sort()
+
+        grid = Grid(empty_grid_array)
+        for lowest_depth in ascending_depths:
+            objects_for_this_depth = objects_by_depth[lowest_depth]
+            for obj in objects_for_this_depth:
+                absolute_positions = Object.convert_to_absolute_positions(obj.top_left_offset, obj.relative_positions)
+                for absolute_position in absolute_positions:
+                    grid.set_colour(absolute_position[0], absolute_position[1], obj.colour)
+        return grid
 
     def __repr__(self):
         return f"(Frame)"

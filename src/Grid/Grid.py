@@ -3,7 +3,7 @@ from matplotlib import colors
 
 import matplotlib
 
-from src.Types import AbsolutePosition, Row, Colour
+from src.Types import AbsolutePosition, Row, Colour, YPosition, XPosition
 
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt  # noqa
@@ -19,10 +19,10 @@ norm = colors.Normalize(vmin = 0, vmax = 9)
 
 
 class Grid:
-    def __init__(self, grid: List[Row]):
-        self.grid: List[Row] = grid
-        self.number_of_rows: int = len(self.grid)
-        self.number_of_columns: int = len(self.grid[0])
+    def __init__(self, grid_array: List[Row]):
+        self.grid_array: List[Row] = grid_array
+        self.number_of_rows: int = len(self.grid_array)
+        self.number_of_columns: int = len(self.grid_array[0])
         self.background_colour = 0
 
     def plot(self, axes = None, title: str = "") -> None:
@@ -30,7 +30,7 @@ class Grid:
         if axes_not_passed_in:
             fig, axes = plt.subplots(1, 1)
 
-        axes.imshow(self.grid, cmap = colour_map, norm = norm)
+        axes.imshow(self.grid_array, cmap = colour_map, norm = norm)
         axes.grid(True, which = 'both', color = 'lightgrey', linewidth = 0.5)
         axes.set_xticks([x - 0.5 for x in range(1 + self.number_of_columns)])
         axes.set_xticklabels([x for x in range(self.number_of_columns)])
@@ -68,8 +68,11 @@ class Grid:
 
         return neighbourhood
 
-    def get_colour(self, x: int, y: int) -> Colour:
-        return self.grid[y][x]
+    def get_colour(self, x: XPosition, y: YPosition) -> Colour:
+        return self.grid_array[y][x]
+
+    def set_colour(self, x: XPosition, y: YPosition, colour: Colour) -> None:
+        self.grid_array[y][x] = colour
 
     def parse_objects(self) -> List[Object]:
         objects = []
@@ -93,7 +96,7 @@ class Grid:
                 make a new object that that has all of the above-processed position in it, and add that object to the grid's list
         '''
         seen_positions: Set[AbsolutePosition] = set()
-        for rowN, row in enumerate(self.grid):
+        for rowN, row in enumerate(self.grid_array):
             for colN, squareColour in enumerate(row):
                 current_position = (colN, rowN)
                 if (
