@@ -16,15 +16,13 @@ norm = colors.Normalize(vmin = 0, vmax = 9)
 
 
 class Grid:
-    def __init__(self, grid: List[List[int]], title: str = ""):
-        self.grid = grid
-        self.number_of_rows = len(self.grid)
-        self.number_of_columns = len(self.grid[0])
+    def __init__(self, grid: List[List[int]]):
+        self.grid: List[List[int]] = grid
+        self.number_of_rows: int = len(self.grid)
+        self.number_of_columns: int = len(self.grid[0])
+        self.background_colour = 0
 
-        self.title = title
-        self.objects: List["Object"] = self.parse_objects()
-
-    def plot(self, axes = None) -> None:
+    def plot(self, axes = None, title: str = "") -> None:
         axes_not_passed_in = axes is None
         if axes_not_passed_in:
             fig, axes = plt.subplots(1, 1)
@@ -37,8 +35,8 @@ class Grid:
 
         axes.set_yticks([x - 0.5 for x in range(1 + self.number_of_rows)])
         axes.set_yticklabels([y for y in range(self.number_of_rows)])
-        if len(self.title) > 0:
-            axes.set_title(self.title)
+        if len(title) > 0:
+            axes.set_title(title)
 
         if axes_not_passed_in:
             plt.tight_layout()

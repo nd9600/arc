@@ -6,7 +6,14 @@ from src.Grid import Grid
 
 class TestObjectDetection(unittest.TestCase):
     def test_getting_neighbourhoods(self):
-        g = [[0, 0, 0, 0, 0, 0], [0, 0, 3, 0, 0, 0], [0, 3, 0, 3, 0, 0], [0, 0, 3, 0, 3, 0], [0, 0, 0, 3, 0, 0], [0, 0, 0, 0, 0, 0]]
+        g = [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 3, 0, 0, 0],
+            [0, 3, 0, 3, 0, 0],
+            [0, 0, 3, 0, 3, 0],
+            [0, 0, 0, 3, 0, 0],
+            [0, 0, 0, 0, 0, 0]
+        ]
 
         grid = Grid(g)
 

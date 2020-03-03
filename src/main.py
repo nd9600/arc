@@ -21,13 +21,13 @@ def plot_task(task):
     for task_number in range(number_of_training_examples):
         input_axis = axes_array[0, task_number]
         input_matrix = task['train'][task_number]['input']
-        input_grid = Grid(input_matrix, 'train input')
-        input_grid.plot(input_axis)
+        input_grid = Grid(input_matrix)
+        input_grid.plot(input_axis, 'train input')
 
         output_axis = axes_array[1, task_number]
         output_matrix = task['train'][task_number]['output']
-        input_grid = Grid(output_matrix, 'train output')
-        input_grid.plot(output_axis)
+        input_grid = Grid(output_matrix)
+        input_grid.plot(output_axis, 'train output')
     plt.tight_layout()
     plt.show()
 
@@ -36,24 +36,24 @@ def plot_task(task):
     if number_of_test_examples == 1:
         input_axis = axes_array[0]
         input_matrix = task['test'][0]['input']
-        test_input_grid = Grid(input_matrix, 'test input')
-        test_input_grid.plot(input_axis)
+        test_input_grid = Grid(input_matrix)
+        test_input_grid.plot(input_axis, 'test input')
 
         output_axis = axes_array[1]
         output_matrix = task['test'][0]['output']
-        test_input_grid = Grid(output_matrix, 'test output')
-        test_input_grid.plot(output_axis)
+        test_input_grid = Grid(output_matrix)
+        test_input_grid.plot(output_axis, 'test output')
     else:
         for task_number in range(number_of_test_examples):
             input_axis = axes_array[0, task_number]
             input_matrix = task['test'][task_number]['input']
-            test_input_grid = Grid(input_matrix, 'test input')
-            test_input_grid.plot(input_axis)
+            test_input_grid = Grid(input_matrix)
+            test_input_grid.plot(input_axis, 'test input')
 
             output_axis = axes_array[1, task_number]
             output_matrix = task['test'][task_number]['output']
-            test_input_grid = Grid(output_matrix, 'test output')
-            test_input_grid.plot(output_axis)
+            test_input_grid = Grid(output_matrix)
+            test_input_grid.plot(output_axis, 'test output')
     plt.tight_layout()
     plt.show()
 
