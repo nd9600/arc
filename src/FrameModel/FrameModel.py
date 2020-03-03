@@ -10,7 +10,6 @@ from src.Grid.Grid import Grid
 from src.Types import Row
 
 
-
 class FrameModel:
     def __init__(
         self,
