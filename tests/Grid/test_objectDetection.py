@@ -1,7 +1,7 @@
 import unittest
 
 
-from src.Grid import Grid
+from src.Grid.Grid import Grid
 
 
 class TestObjectDetection(unittest.TestCase):

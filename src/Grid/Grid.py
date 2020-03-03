@@ -1,13 +1,16 @@
-from typing import List, Tuple, Set, Deque
+from typing import List, Set, Deque
 from matplotlib import colors
 
 import matplotlib
+
+from src.Types import AbsolutePosition, Row, Colour
+
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt  # noqa
 
 from collections import deque # noqa
 
-from src.FrameModel import Object  # noqa
+from src.FrameModel.Object import Object  # noqa
 
 colour_map = colors.ListedColormap(
     ['#000000', '#0074D9', '#FF4136', '#2ECC40', '#FFDC00', '#AAAAAA', '#F012BE', '#FF851B', '#7FDBFF', '#870C25']
@@ -16,8 +19,8 @@ norm = colors.Normalize(vmin = 0, vmax = 9)
 
 
 class Grid:
-    def __init__(self, grid: List[List[int]]):
-        self.grid: List[List[int]] = grid
+    def __init__(self, grid: List[Row]):
+        self.grid: List[Row] = grid
         self.number_of_rows: int = len(self.grid)
         self.number_of_columns: int = len(self.grid[0])
         self.background_colour = 0
@@ -42,7 +45,7 @@ class Grid:
             plt.tight_layout()
             plt.show()
 
-    def get_neighbourhood(self, x: int, y: int) -> List[Tuple[int, int]]:
+    def get_neighbourhood(self, x: int, y: int) -> List[AbsolutePosition]:
         xs = [
             row_x
             for row_x in [x - 1, x, x + 1]
@@ -65,14 +68,14 @@ class Grid:
 
         return neighbourhood
 
-    def get_colour(self, x: int, y: int) -> int:
+    def get_colour(self, x: int, y: int) -> Colour:
         return self.grid[y][x]
 
-    def parse_objects(self) -> List["Object"]:
+    def parse_objects(self) -> List[Object]:
         objects = []
 
         '''
-        Objects are
+        Grid are
             * complete
             * connected
             * solid bodies
@@ -89,7 +92,7 @@ class Grid:
                     add to the "needs processing" queue
                 make a new object that that has all of the above-processed position in it, and add that object to the grid's list
         '''
-        seen_positions: Set[Tuple[int, int]] = set()
+        seen_positions: Set[AbsolutePosition] = set()
         for rowN, row in enumerate(self.grid):
             for colN, squareColour in enumerate(row):
                 current_position = (colN, rowN)
@@ -100,7 +103,7 @@ class Grid:
                     continue
 
                 positions_for_this_object = []
-                object_position_queue: Deque[Tuple[int, int]] = deque()
+                object_position_queue: Deque[AbsolutePosition] = deque()
                 object_position_queue.append(current_position)
                 while len(object_position_queue) > 0:
                     current_position = object_position_queue.pop()
@@ -110,13 +113,16 @@ class Grid:
                     x = current_position[0]
                     y = current_position[1]
                     neighbourhood = self.get_neighbourhood(x, y)
-                    neighbouring_squares_with_the_same_colour = list(filter(lambda pos: self.get_colour(pos[0], pos[1]) == squareColour, neighbourhood))
+                    neighbouring_squares_with_the_same_colour = list(filter(
+                        lambda pos: self.get_colour(pos[0], pos[1]) == squareColour,
+                        neighbourhood
+                    ))
                     for position in neighbouring_squares_with_the_same_colour:
                         if position not in seen_positions:
                             object_position_queue.append(position)
                             seen_positions.add(position)
 
-                unseen_object = Object.Object(squareColour, positions_for_this_object)
+                unseen_object = Object.create_with_absolute_positions(squareColour, positions_for_this_object)
                 objects.append(unseen_object)
 
         return objects

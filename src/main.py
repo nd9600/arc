@@ -4,10 +4,10 @@ from pathlib import Path
 
 import matplotlib
 
+from src.Grid.Grid import Grid
+
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-
-from Grid import Grid
 
 
 def plot_task(task):
