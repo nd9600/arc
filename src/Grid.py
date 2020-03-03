@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Set, Deque
 from matplotlib import colors
 
 import matplotlib
@@ -91,7 +91,7 @@ class Grid:
                     add to the "needs processing" queue
                 make a new object that that has all of the above-processed position in it, and add that object to the grid's list
         '''
-        seen_positions = set()
+        seen_positions: Set[Tuple[int, int]] = set()
         for rowN, row in enumerate(self.grid):
             for colN, squareColour in enumerate(row):
                 current_position = (colN, rowN)
@@ -102,7 +102,7 @@ class Grid:
                     continue
 
                 positions_for_this_object = []
-                object_position_queue = deque()
+                object_position_queue: Deque[Tuple[int, int]] = deque()
                 object_position_queue.append(current_position)
                 while len(object_position_queue) > 0:
                     current_position = object_position_queue.pop()
