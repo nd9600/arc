@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt  # noqa
 
 from collections import deque # noqa
 
-from Objects import Object  # noqa
+from src.FrameModel import Object  # noqa
 
 colour_map = colors.ListedColormap(
     ['#000000', '#0074D9', '#FF4136', '#2ECC40', '#FFDC00', '#AAAAAA', '#F012BE', '#FF851B', '#7FDBFF', '#870C25']
@@ -22,7 +22,7 @@ class Grid:
         self.number_of_columns = len(self.grid[0])
 
         self.title = title
-        # self.objects: List["Object"] = self.parse_objects()
+        self.objects: List["Object"] = self.parse_objects()
 
     def plot(self, axes = None) -> None:
         axes_not_passed_in = axes is None
