@@ -1,9 +1,10 @@
-import os
 import json
+import os
 from pathlib import Path
 
 import matplotlib
 
+from src.FrameModel.FrameModel import FrameModel
 from src.Grid.Grid import Grid
 
 matplotlib.use('TkAgg')
@@ -80,6 +81,7 @@ def main():
         print(training_tasks[i])
 
         grid = Grid(g)
+        frame_model = FrameModel.create_from_grid(grid)
         plot_task(task_json)
 
 

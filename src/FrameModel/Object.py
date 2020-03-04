@@ -1,4 +1,5 @@
-from typing import List, Tuple
+import itertools
+from typing import List
 
 from src.Types import AbsolutePosition, RelativePosition
 
@@ -17,6 +18,8 @@ colour_names = {
 
 
 class Object:
+    id_iter = itertools.count()
+
     def __init__(
         self,
         colour: int,
@@ -29,6 +32,7 @@ class Object:
             and top_left_offset[1] >= 0
         )
 
+        self.id = next(self.id_iter)
         self.colour = colour
         self.top_left_offset = top_left_offset
         self.relative_positions: List[RelativePosition] = relative_positions

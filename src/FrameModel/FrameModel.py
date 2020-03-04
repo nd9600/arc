@@ -1,12 +1,10 @@
-from typing import List
+from collections import defaultdict
+from typing import List, Dict
 
 import numpy as np
 
-from collections import defaultdict
-
 from src.FrameModel.Object import Object
 from src.Grid.Grid import Grid
-
 from src.Types import Row
 
 
@@ -16,7 +14,7 @@ class FrameModel:
         number_of_rows: int,
         number_of_columns: int,
         background_colour: int,
-        objects: List[Object],
+        objects: Dict[int, Object],
         agents: List = []
     ):
         self.number_of_rows = number_of_rows
@@ -46,8 +44,9 @@ class FrameModel:
         ).tolist()
 
         # find lowest depth, then colour all objects that have that depth, then all objects for depth above, etc.
-        objects_by_depth = defaultdict(list)
-        for obj in self.objects:
+        # noinspection PyTypeChecker
+        objects_by_depth: Dict[int, List[Object]] = defaultdict(list)
+        for obj in self.objects.values():
             objects_by_depth[obj.depth].append(obj)
 
         ascending_depths = list(objects_by_depth.keys())

@@ -1,14 +1,13 @@
-from typing import List, Set, Deque
-from matplotlib import colors
+from collections import deque  # noqa
+from typing import List, Set, Deque, Dict
 
 import matplotlib
+from matplotlib import colors
 
 from src.Types import AbsolutePosition, Row, Colour, YPosition, XPosition
 
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt  # noqa
-
-from collections import deque # noqa
 
 from src.FrameModel.Object import Object  # noqa
 
@@ -74,7 +73,7 @@ class Grid:
     def set_colour(self, x: XPosition, y: YPosition, colour: Colour) -> None:
         self.grid_array[y][x] = colour
 
-    def parse_objects(self) -> List[Object]:
+    def parse_objects(self) -> Dict[int, Object]:
         objects = []
 
         '''
@@ -128,4 +127,4 @@ class Grid:
                 unseen_object = Object.create_with_absolute_positions(squareColour, positions_for_this_object)
                 objects.append(unseen_object)
 
-        return objects
+        return {obj.id: obj for obj in objects}

@@ -45,8 +45,8 @@ class TestMakingGridsFromFrameModels(unittest.TestCase):
             3,
             3,
             0,
-            [
-                Object(
+            {
+                1: Object(
                     1,
                     (0, 0),
                     [
@@ -57,7 +57,7 @@ class TestMakingGridsFromFrameModels(unittest.TestCase):
                     ],
                     0
                 ),
-                Object(
+                2: Object(
                     2,
                     (1, 1),
                     [
@@ -68,7 +68,7 @@ class TestMakingGridsFromFrameModels(unittest.TestCase):
                     ],
                     -1
                 )
-            ],
+            },
             []
         )
         grid = frame_model.to_grid()
