@@ -1,6 +1,6 @@
 from typing import List
 
-from FrameModel.FrameModel import FrameModel
+from src.FrameModel.FrameModel import FrameModel
 
 
 class FrameCollection:

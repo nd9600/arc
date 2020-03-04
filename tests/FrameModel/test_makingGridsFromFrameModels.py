@@ -1,6 +1,6 @@
 import unittest
 
-from FrameModel.Object import Object
+from src.FrameModel.Object import Object
 from src.FrameModel.FrameModel import FrameModel
 from src.Grid.Grid import Grid
 
