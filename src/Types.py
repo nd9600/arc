@@ -9,3 +9,6 @@ Colour = int
 
 Row = List[Colour]
 
+ObjectId = int
+ObjectKind = str
+

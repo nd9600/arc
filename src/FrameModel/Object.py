@@ -1,7 +1,8 @@
 import itertools
+import json
 from typing import List
 
-from src.Types import AbsolutePosition, RelativePosition
+from src.Types import AbsolutePosition, RelativePosition, ObjectId, ObjectKind
 
 colour_names = {
     0: "black",
@@ -32,7 +33,7 @@ class Object:
             and top_left_offset[1] >= 0
         )
 
-        self.id = next(self.id_iter)
+        self.id: ObjectId = next(self.id_iter)
         self.colour = colour
         self.top_left_offset = top_left_offset
         self.relative_positions: List[RelativePosition] = relative_positions
@@ -91,6 +92,10 @@ class Object:
             make_absolute_position,
             relative_positions
         ))
+
+    def get_object_kind(self) -> ObjectKind:
+        json_encoded_relative_positions = json.dumps(self.relative_positions)
+        return f"{self.colour}:{json_encoded_relative_positions}"
 
     def __repr__(self):
         absolute_positions = Object.convert_to_absolute_positions(self.top_left_offset, self.relative_positions)

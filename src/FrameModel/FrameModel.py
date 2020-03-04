@@ -3,9 +3,10 @@ from typing import List, Dict
 
 import numpy as np
 
+from src.Runtime.Runtime import Runtime
 from src.FrameModel.Object import Object
 from src.Grid.Grid import Grid
-from src.Types import Row
+from src.Types import Row, ObjectId, ObjectKind
 
 
 class FrameModel:
@@ -60,6 +61,39 @@ class FrameModel:
                 for absolute_position in absolute_positions:
                     grid.set_colour(absolute_position[0], absolute_position[1], obj.colour)
         return grid
+
+    def group_same_objects(self) -> Dict[ObjectKind, List[ObjectId]]:
+        grouped_objects: Dict[ObjectKind, List[ObjectId]] = defaultdict(list)
+
+        ungrouped_objects = list(self.objects.values())
+        obj_a_index = 0
+        while True:
+            # we don't need to explicitly compare the last object,
+            # it'll have already been compared to every other object
+            current_object_is_last_object = (
+                obj_a_index > 0 # it always needs to group the first object
+                and obj_a_index >= len(ungrouped_objects) - 1
+            )
+            if current_object_is_last_object:
+                break
+
+            obj_a = ungrouped_objects[obj_a_index]
+
+            # if an object is already been grouped, any other objects it's the same as will have been grouped too,
+            # so we don't need to compare it
+            if obj_a.id in grouped_objects.values():
+                obj_a_index = obj_a_index + 1
+                continue
+
+            obj_kind = obj_a.get_object_kind()
+            grouped_objects[obj_kind].append(obj_a.id)
+
+            for obj_b_index in range(obj_a_index + 1, len(ungrouped_objects)):
+                obj_b = ungrouped_objects[obj_b_index]
+                if Runtime.objects_are_the_same(obj_a, obj_b):
+                    grouped_objects[obj_kind].append(obj_b.id)
+            obj_a_index = obj_a_index + 1
+        return dict(grouped_objects)
 
     def __repr__(self):
         return f"(Frame)"
