@@ -4,6 +4,7 @@ from pathlib import Path
 
 import matplotlib
 
+from src.ARCDriver.ARCDriver import ARCDriver
 from src.FrameModel.FrameModel import FrameModel
 from src.Grid.Grid import Grid
 
@@ -58,7 +59,6 @@ def plot_task(task):
     plt.tight_layout()
     plt.show()
 
-
 def main():
     root_path = Path(Path(__file__).parent.parent.absolute())
     data_path = root_path / "data"
@@ -77,12 +77,10 @@ def main():
         with open(task_file, 'r') as file:
             task_json = json.load(file)
 
-        g = task_json["train"][0]["input"]
-        print(training_tasks[i])
-
-        grid = Grid(g)
-        frame_model = FrameModel.create_from_grid(grid)
-        plot_task(task_json)
+        driver = ARCDriver(task_json)
+        frame_model: FrameModel = driver.test_frames[0]["input"]
+        frame_model.to_grid().plot()
+        # plot_task(task_json)
 
 
 if __name__== "__main__":
