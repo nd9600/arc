@@ -95,9 +95,9 @@ class Grid:
                 make a new object that that has all of the above-processed position in it, and add that object to the grid's list
         '''
         seen_positions: Set[AbsolutePosition] = set()
-        for rowN, row in enumerate(self.grid_array):
-            for colN, squareColour in enumerate(row):
-                current_position = (colN, rowN)
+        for y, row in enumerate(self.grid_array):
+            for x, squareColour in enumerate(row):
+                current_position = (x, y)
                 if (
                     squareColour == 0
                     or current_position in seen_positions
@@ -112,9 +112,9 @@ class Grid:
                     positions_for_this_object.append(current_position)
                     seen_positions.add(current_position)
 
-                    x = current_position[0]
-                    y = current_position[1]
-                    neighbourhood = self.get_neighbourhood(x, y)
+                    new_x = current_position[0]
+                    new_y = current_position[1]
+                    neighbourhood = self.get_neighbourhood(new_x, new_y)
                     neighbouring_squares_with_the_same_colour = list(filter(
                         lambda pos: self.get_colour(pos[0], pos[1]) == squareColour,
                         neighbourhood
