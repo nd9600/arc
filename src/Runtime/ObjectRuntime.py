@@ -30,6 +30,7 @@ def objects_are_the_same(a: Object.Object, b: Object.Object) -> bool:
 
 
 def crop_frame_model_to_objects(objects: List[Object.Object], background_colour: int = 0) -> "src.FrameModel":
+    # todo: find top left offset that is the the left of and above all objects, and convert all the objects top left offsets relative to that
     obj = objects[0]
     obj.top_left_offset = (0, 0)
 
