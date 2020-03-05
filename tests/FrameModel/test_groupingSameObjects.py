@@ -1,10 +1,9 @@
 import unittest
 from typing import Dict, List
 
+from src.FrameModel.FrameModel import FrameModel
 from src.FrameModel.Object import Object
 from src.Types import ObjectId, ObjectKind
-from src.FrameModel.FrameModel import FrameModel
-from src.Grid.Grid import Grid
 
 
 class TestGroupingSameObjects(unittest.TestCase):
@@ -35,9 +34,6 @@ class TestGroupingSameObjects(unittest.TestCase):
         actual_object_group = actual_grouped_objects[obj.get_object_kind()]
         self.assertEqual(1, len(list(actual_grouped_objects.keys())))
         self.assertEqual(1, len(actual_object_group))
-
-        print(expected_grouped_objects)
-        print(actual_grouped_objects)
 
         self.assertEqual(
             list(expected_grouped_objects.keys()),
@@ -97,7 +93,7 @@ class TestGroupingSameObjects(unittest.TestCase):
         )
 
     def test_grouping_two_objects_where_one_is_rotated(self):
-        # todo: fails because rotation isn't taken into account
+        raise AssertionError("can't group a rotated object with an unrotated one, because rotation isn't taken into account for object similarity")
         g = [
             [0, 1, 1],
             [0, 0, 0],

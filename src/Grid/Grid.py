@@ -1,5 +1,5 @@
 from collections import deque  # noqa
-from typing import List, Set, Deque, Dict
+from typing import List, Set, Deque
 
 import matplotlib
 from matplotlib import colors

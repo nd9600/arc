@@ -1,6 +1,5 @@
 import unittest
 
-
 from src.Grid.Grid import Grid
 
 

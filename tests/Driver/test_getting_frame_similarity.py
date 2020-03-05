@@ -1,9 +1,6 @@
 import unittest
-from typing import Dict, List
 
 from src.ARCDriver.ARCDriver import ARCDriver
-from src.FrameModel.Object import Object
-from src.Types import ObjectId, ObjectKind
 from src.FrameModel.FrameModel import FrameModel
 from src.Grid.Grid import Grid
 

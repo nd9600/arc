@@ -3,7 +3,7 @@ from typing import List, Dict, Union
 
 import numpy as np
 
-from src.Runtime.Runtime import Runtime
+import src.Runtime.ObjectRuntime
 from src.FrameModel.Object import Object
 from src.Grid.Grid import Grid
 from src.Types import Row, ObjectId, ObjectKind
@@ -71,7 +71,7 @@ class FrameModel:
             # we don't need to explicitly compare the last object,
             # it'll have already been compared to every other object
             current_object_is_last_object = (
-                obj_a_index > 0 # it always needs to group the first object
+                obj_a_index > 0  # it always needs to group the first object
                 and obj_a_index >= len(ungrouped_objects) - 1
             )
             if current_object_is_last_object:
@@ -90,7 +90,7 @@ class FrameModel:
 
             for obj_b_index in range(obj_a_index + 1, len(ungrouped_objects)):
                 obj_b = ungrouped_objects[obj_b_index]
-                if Runtime.objects_are_the_same(obj_a, obj_b):
+                if src.Runtime.ObjectRuntime.objects_are_the_same(obj_a, obj_b):
                     grouped_objects[obj_kind].append(obj_b.id)
             obj_a_index = obj_a_index + 1
         return dict(grouped_objects)

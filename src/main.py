@@ -59,6 +59,7 @@ def plot_task(task):
     plt.tight_layout()
     plt.show()
 
+
 def main():
     root_path = Path(Path(__file__).parent.parent.absolute())
     data_path = root_path / "data"
