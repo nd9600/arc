@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import List, Dict
+from typing import List, Dict, Union
 
 import numpy as np
 
@@ -15,13 +15,13 @@ class FrameModel:
         number_of_rows: int,
         number_of_columns: int,
         background_colour: int,
-        objects: Dict[int, Object],
+        objects: Union[List[Object], Dict[int, Object]],
         agents: List = []
     ):
         self.number_of_rows = number_of_rows
         self.number_of_columns = number_of_columns
         self.background_colour = background_colour
-        self.objects = objects
+        self.objects = {obj.id: obj for obj in objects} if (isinstance(objects, list)) else objects
         self.agents = agents
 
     @staticmethod

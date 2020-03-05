@@ -26,14 +26,15 @@ class Object:
         colour: int,
         top_left_offset: AbsolutePosition,
         relative_positions: List[RelativePosition],
-        depth = 0
+        depth = 0,
+        id = None
     ):
         assert(
             top_left_offset[0] >= 0
             and top_left_offset[1] >= 0
         )
 
-        self.id: ObjectId = next(self.id_iter)
+        self.id: ObjectId = next(self.id_iter) if (id is None) else id
         self.colour = colour
         self.top_left_offset = top_left_offset
         self.relative_positions: List[RelativePosition] = relative_positions

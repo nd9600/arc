@@ -1,6 +1,7 @@
 import unittest
 from typing import Dict, List
 
+from src.FrameModel.Object import Object
 from src.Types import ObjectId, ObjectKind
 from src.FrameModel.FrameModel import FrameModel
 from src.Grid.Grid import Grid
@@ -8,17 +9,23 @@ from src.Grid.Grid import Grid
 
 class TestGroupingSameObjects(unittest.TestCase):
     def test_grouping_one_object(self):
-        # tests fail because of IDs
-        g = [
-            [0, 1, 1],
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-        ]
-        grid = Grid(g)
-        frame_model = FrameModel.create_from_grid(grid)
-
-        obj = list(grid.parse_objects().values())[0]
+        obj = Object(
+            1,
+            (1, 0),
+            [
+                (0, 0),
+                (1, 0),
+            ],
+            0
+        )
+        frame_model = FrameModel(
+            3,
+            3,
+            0,
+            [
+                obj
+            ]
+        )
         expected_grouped_objects: Dict[ObjectKind, List[ObjectId]] = {
             obj.get_object_kind(): [obj.id]
         }
@@ -42,16 +49,33 @@ class TestGroupingSameObjects(unittest.TestCase):
         )
 
     def test_grouping_two_objects(self):
-        g = [
-            [0, 1, 1],
-            [0, 0, 0],
-            [0, 0, 0],
-            [1, 1, 0],
-        ]
-        grid = Grid(g)
-        frame_model = FrameModel.create_from_grid(grid)
-        obj_a = list(grid.parse_objects().values())[0]
-        obj_b = list(grid.parse_objects().values())[1]
+        obj_a = Object(
+            1,
+            (1, 0),
+            [
+                (0, 0),
+                (1, 0),
+            ],
+            0
+        )
+        obj_b = Object(
+            1,
+            (0, 4),
+            [
+                (0, 0),
+                (1, 0),
+            ],
+            1
+        )
+        frame_model = FrameModel(
+            4,
+            3,
+            0,
+            [
+                obj_a,
+                obj_b,
+            ]
+        )
         expected_grouped_objects: Dict[ObjectKind, List[ObjectId]] = {
             obj_a.get_object_kind(): [obj_a.id, obj_b.id]
         }
@@ -80,10 +104,33 @@ class TestGroupingSameObjects(unittest.TestCase):
             [0, 1, 0],
             [0, 1, 0],
         ]
-        grid = Grid(g)
-        frame_model = FrameModel.create_from_grid(grid)
-        obj_a = list(grid.parse_objects().values())[0]
-        obj_b = list(grid.parse_objects().values())[1]
+        obj_a = Object(
+            1,
+            (1, 0),
+            [
+                (0, 0),
+                (1, 0),
+            ],
+            0
+        )
+        obj_b = Object(
+            1,
+            (2, 3),
+            [
+                (0, 0),
+                (0, 1),
+            ],
+            1
+        )
+        frame_model = FrameModel(
+            4,
+            3,
+            0,
+            [
+                obj_a,
+                obj_b,
+            ]
+        )
         expected_grouped_objects: Dict[ObjectKind, List[ObjectId]] = {
             obj_a.get_object_kind(): [obj_a.id, obj_b.id]
         }

@@ -73,7 +73,7 @@ class Grid:
     def set_colour(self, x: XPosition, y: YPosition, colour: Colour) -> None:
         self.grid_array[y][x] = colour
 
-    def parse_objects(self) -> Dict[int, Object]:
+    def parse_objects(self) -> List[Object]:
         objects = []
 
         '''
@@ -127,4 +127,4 @@ class Grid:
                 unseen_object = Object.create_with_absolute_positions(squareColour, positions_for_this_object)
                 objects.append(unseen_object)
 
-        return {obj.id: obj for obj in objects}
+        return objects
