@@ -1,4 +1,5 @@
 import json
+import math
 from typing import List
 
 import src.FrameModel.FrameModel
@@ -30,24 +31,44 @@ def objects_are_the_same(a: Object.Object, b: Object.Object) -> bool:
 
 
 def crop_frame_model_to_objects(objects: List[Object.Object], background_colour: int = 0) -> "src.FrameModel.FrameModel.FrameModel":
-    # todo: find top left offset that is the the left of and above all objects, and convert all the objects top left offsets relative to that
-    obj = objects[0]
-    obj.top_left_offset = (0, 0)
+    # finds the top left offset that is the the left of and above all objects,
+    # and converts all the objects' top left offsets relative to that
+    min_top_left_x = math.inf
+    min_top_left_y = math.inf
 
-    max_x_offset = max(list(map(
-        lambda pos: pos[0],
-        obj.relative_positions
-    )))
-    max_y_offset = max(list(map(
-        lambda pos: pos[1],
-        obj.relative_positions
-    )))
+    # also calculates the max x and y offsets, used to find the numbers of rows and columns needed
+    max_x_offset = 0
+    max_y_offset = 0
 
-    object_height = max_y_offset + 1  # if the only relative_position is (0, 0), the object is 1x1
-    object_width = max_x_offset + 1
+    for obj in objects:
+        if obj.top_left_offset[0] < min_top_left_x:
+            min_top_left_x = obj.top_left_offset[0]
+        if obj.top_left_offset[1] < min_top_left_y:
+            min_top_left_y = obj.top_left_offset[1]
+
+        obj_max_x_offset = max(list(map(
+            lambda pos: pos[0],
+            obj.relative_positions
+        )))
+        if obj_max_x_offset > max_x_offset:
+            max_x_offset = obj_max_x_offset
+
+        obj_max_y_offset = max(list(map(
+            lambda pos: pos[1],
+            obj.relative_positions
+        )))
+        if obj_max_y_offset > max_y_offset:
+            max_y_offset = obj_max_y_offset
+
+    for i, obj in enumerate(objects):
+        obj.top_left_offset = (obj.top_left_offset[0] - min_top_left_x, obj.top_left_offset[1] - min_top_left_y)
+        objects[i] = obj
+
+    number_of_rows = max_y_offset + 1  # if the only relative_position is (0, 0), the object is 1x1
+    number_of_columns = max_x_offset + 1
     return src.FrameModel.FrameModel.FrameModel(
-        object_height,
-        object_width,
+        number_of_rows,
+        number_of_columns,
         background_colour,
-        [obj]
+        objects
     )
