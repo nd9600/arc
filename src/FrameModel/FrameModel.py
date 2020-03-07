@@ -90,7 +90,7 @@ class FrameModel:
 
             for obj_b_index in range(obj_a_index + 1, len(ungrouped_objects)):
                 obj_b = ungrouped_objects[obj_b_index]
-                if src.Runtime.ObjectRuntime.objects_are_the_same(obj_a, obj_b):
+                if src.Runtime.ObjectRuntime.are_objects_the_same(obj_a, obj_b):
                     grouped_objects[obj_kind].append(obj_b.id)
             obj_a_index = obj_a_index + 1
         return dict(grouped_objects)

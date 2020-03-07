@@ -1,12 +1,14 @@
+from typing import List
+from src.Types import AbsolutePosition, RelativePosition
+
 import json
 import math
-from typing import List
 
 import src.FrameModel.FrameModel
 import src.FrameModel.Object as Object
 
 
-def objects_are_the_same(a: Object.Object, b: Object.Object) -> bool:
+def are_objects_the_same(a: Object.Object, b: Object.Object) -> bool:
     a_kind = a.get_object_kind()
     b_kind = b.get_object_kind()
 
@@ -33,8 +35,8 @@ def objects_are_the_same(a: Object.Object, b: Object.Object) -> bool:
 def crop_frame_model_to_objects(objects: List[Object.Object], background_colour: int = 0) -> "src.FrameModel.FrameModel.FrameModel":
     # finds the top left offset that is the the left of and above all objects,
     # and converts all the objects' top left offsets relative to that
-    min_top_left_x = math.inf
-    min_top_left_y = math.inf
+    min_top_left_x = 32
+    min_top_left_y = 32
 
     # also calculates the max x and y offsets, used to find the numbers of rows and columns needed
     max_x_offset = 0
@@ -72,3 +74,85 @@ def crop_frame_model_to_objects(objects: List[Object.Object], background_colour:
         background_colour,
         objects
     )
+
+
+def rotate_object_about_point(obj: Object.Object, angle: int, about_point) -> Object.Object:
+    def round_half_up(n):
+        return math.floor(n + 0.5)
+
+    def round_half_down(n):
+        return math.ceil(n - 0.5)
+
+    def rotate(point: RelativePosition, radian_angle: float, origin: AbsolutePosition = (0, 0)):
+        """
+        Rotate a point counterclockwise by a given angle around a given origin.
+
+        The angle should be given in radians.
+        """
+        ox, oy = origin
+        px, py = point
+
+        qx = ox + math.cos(radian_angle) * (px - ox) - math.sin(radian_angle) * (py - oy)
+        qy = oy + math.sin(radian_angle) * (px - ox) + math.cos(radian_angle) * (py - oy)
+        print((qx), (qy))
+        rounded_qx = math.floor(qx) if qx > 0 else math.ceil(qx)
+        rounded_qy = math.floor(qy) if qy > 0 else math.ceil(qy)
+        return rounded_qx, rounded_qy
+
+    angle_in_radians = (angle) * math.pi/180
+    rotated_relative_positions = list(map(
+        lambda pos: rotate(pos, angle_in_radians, about_point),
+        obj.relative_positions
+    ))
+    # if any of the rotated_relative_positions contain a negative int,
+    # we need to move the top left offset so that they're all >= 0, and recalculate all the relative positions
+
+    min_x_offset = min(list(map(
+        lambda pos: pos[0],
+        rotated_relative_positions
+    )))
+    min_y_offset = min(list(map(
+        lambda pos: pos[1],
+        rotated_relative_positions
+    )))
+    top_left_offset_after_rotation = obj.top_left_offset
+    if min_x_offset < 0:
+        rotated_relative_positions = list(map(
+            lambda pos: (pos[0] + abs(min_x_offset), pos[1]),
+            rotated_relative_positions
+        ))
+        top_left_offset_after_rotation = (top_left_offset_after_rotation[0] + min_x_offset, top_left_offset_after_rotation[1])
+
+    if min_y_offset < 0:
+        rotated_relative_positions = list(map(
+            lambda pos: (pos[0], pos[1] + abs(min_y_offset)),
+            rotated_relative_positions
+        ))
+        top_left_offset_after_rotation = (top_left_offset_after_rotation[0], top_left_offset_after_rotation[1] + min_y_offset)
+
+    print(obj.top_left_offset, obj.relative_positions)
+    print(top_left_offset_after_rotation, rotated_relative_positions)
+    top_left_offset_after_rotation = (
+        max(top_left_offset_after_rotation[0], 0),
+        max(top_left_offset_after_rotation[1], 0)
+    )
+    # todo: move the tl offset if (it + max obj offset) is > grid size, too
+    print(top_left_offset_after_rotation, rotated_relative_positions)
+
+    return Object.Object(
+        obj.colour,
+        top_left_offset_after_rotation,
+        rotated_relative_positions,
+        obj.depth
+    )
+
+
+def rotate_object(obj: Object.Object, angle: int) -> Object.Object:
+    return rotate_object_about_point(obj, angle, (0, 0))
+
+
+def rotate_object_90(obj: Object.Object) -> Object.Object:
+    return rotate_object(obj, 90)
+
+def rotate_object_45(obj: Object.Object) -> Object.Object:
+    return rotate_object(obj, 45)

@@ -22,6 +22,3 @@ def double(x): return x * 2
 
 
 def inc(x): return x + 1
-
-
-print(compose([inc, double, inc])(1))
