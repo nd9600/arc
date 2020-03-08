@@ -57,7 +57,7 @@ class FrameModel:
         for lowest_depth in ascending_depths:
             objects_for_this_depth = objects_by_depth[lowest_depth]
             for obj in objects_for_this_depth:
-                absolute_positions = Object.convert_to_absolute_positions(obj.top_left_offset, obj.relative_positions)
+                absolute_positions = obj.convert_to_absolute_positions()
                 for absolute_position in absolute_positions:
                     grid.set_colour(absolute_position[0], absolute_position[1], obj.colour)
         return grid

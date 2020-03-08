@@ -2,6 +2,7 @@ import unittest
 
 import UsefulFunctions
 import src.Runtime.ObjectRuntime as ObjectRuntime
+from FrameModel.FrameModel import FrameModel
 from src.FrameModel.Object import Object
 
 
@@ -16,7 +17,7 @@ class TestRotatingObjects(unittest.TestCase):
                 (2, 0),
             ]
         )
-        rotated_obj: Object = ObjectRuntime.rotate_object(obj, 90)
+        rotated_obj: Object = ObjectRuntime.relatively_rotate_object_90(obj)
         self.assertEqual(
             [
                 (0, 0),
@@ -26,7 +27,7 @@ class TestRotatingObjects(unittest.TestCase):
             rotated_obj.relative_positions
         )
 
-    def test_rotating_l_shape_90_degrees(self):
+    def test_relatively_rotating_l_shape_270_degrees(self):
         obj = Object(
             1,
             (1, 0),
@@ -37,11 +38,119 @@ class TestRotatingObjects(unittest.TestCase):
                 (2, 1),
             ]
         )
-        # rotated_obj: Object = UsefulFunctions.compose([ObjectRuntime.rotate_object_90])(obj)
-        rotated_obj: Object = ObjectRuntime.rotate_object(obj, 90)
-        # the top left offset had to be shifted to accomodate something
+        rotated_obj: Object = UsefulFunctions.compose([
+            ObjectRuntime.relatively_rotate_object_270,
+        ])(obj)
         self.assertEqual(
-            (0, 0),
+            (1, 0),
+            rotated_obj.top_left_offset
+        )
+        self.assertEqual(
+            [
+                (0, 2),
+                (0, 1),
+                (0, 0),
+                (1, 0)
+            ],
+            rotated_obj.relative_positions
+        )
+
+    def test_absolutely_rotating_l_shape_270_degrees_when_it_would_go_off_top_of_grid(self):
+        obj = Object(
+            1,
+            (1, 0),
+            [
+                (0, 0),
+                (1, 0),
+                (2, 0),
+                (2, 1),
+            ]
+        )
+
+        rotated_obj: Object = ObjectRuntime.absolutely_rotate_object_270((1, 0), obj)
+        self.assertEqual(
+            (1, 0),
+            rotated_obj.top_left_offset
+        )
+        self.assertEqual(
+            [
+                (0, 2),
+                (0, 1),
+                (0, 0),
+                (1, 0)
+            ],
+            rotated_obj.relative_positions
+        )
+
+    def test_absolutely_rotating_l_shape_270_degrees_when_it_wouldnt_go_off_top_of_grid(self):
+        obj = Object(
+            1,
+            (5, 5),
+            [
+                (0, 0),
+                (1, 0),
+                (2, 0),
+                (2, 1),
+            ]
+        )
+
+        rotated_obj: Object = ObjectRuntime.absolutely_rotate_object_270((5, 5), obj)
+        self.assertEqual(
+            (5, 3),
+            rotated_obj.top_left_offset
+        )
+        self.assertEqual(
+            [
+                (0, 2),
+                (0, 1),
+                (0, 0),
+                (1, 0)
+            ],
+            rotated_obj.relative_positions
+        )
+
+    def test_relatively_rotating_l_shape_270_degrees_when_it_wouldnt_go_off_top_of_grid(self):
+        obj = Object(
+            1,
+            (5, 5),
+            [
+                (0, 0),
+                (1, 0),
+                (2, 0),
+                (2, 1),
+            ]
+        )
+
+        rotated_obj: Object = ObjectRuntime.relatively_rotate_object_270(obj)
+        self.assertEqual(
+            (5, 3),
+            rotated_obj.top_left_offset
+        )
+        self.assertEqual(
+            [
+                (0, 2),
+                (0, 1),
+                (0, 0),
+                (1, 0)
+            ],
+            rotated_obj.relative_positions
+        )
+
+    def test_rotating_l_shape_90_degrees_when_it_wouldnt_go_off_grid(self):
+        obj = Object(
+            1,
+            (9, 3),
+            [
+                (0, 0),
+                (1, 0),
+                (2, 0),
+                (2, 1),
+            ]
+        )
+        rotated_obj: Object = UsefulFunctions.compose([ObjectRuntime.relatively_rotate_object_90])(obj)
+        # the top left offset had to be shifted to accommodate the L being 2 squares wide
+        self.assertEqual(
+            (8, 3),
             rotated_obj.top_left_offset
         )
         self.assertEqual(
@@ -66,7 +175,7 @@ class TestRotatingObjects(unittest.TestCase):
             ]
         )
 
-        rotated_obj: Object = ObjectRuntime.rotate_object(obj, 360)
+        rotated_obj: Object = ObjectRuntime.relatively_rotate_object(360, obj)
         self.assertEqual(
             obj.top_left_offset,
             rotated_obj.top_left_offset
@@ -94,10 +203,10 @@ class TestRotatingObjects(unittest.TestCase):
 
         rotated_obj = UsefulFunctions.compose(
             [
-                ObjectRuntime.rotate_object_90,
-                ObjectRuntime.rotate_object_90,
-                ObjectRuntime.rotate_object_90,
-                ObjectRuntime.rotate_object_90
+                ObjectRuntime.relatively_rotate_object_90,
+                ObjectRuntime.relatively_rotate_object_90,
+                ObjectRuntime.relatively_rotate_object_90,
+                ObjectRuntime.relatively_rotate_object_90
             ]
         )(obj)
         self.assertEqual(

@@ -77,21 +77,17 @@ class Object:
             absolute_positions
         ))
 
-    @staticmethod
-    def convert_to_absolute_positions(
-            top_left_offset: AbsolutePosition,
-            relative_positions: List[RelativePosition]
-    ) -> List[AbsolutePosition]:
+    def convert_to_absolute_positions(self) -> List[AbsolutePosition]:
         def make_absolute_position(relative_position: RelativePosition):
-            absolute_position = (top_left_offset[0] + relative_position[0], top_left_offset[1] + relative_position[1])
+            absolute_position = (self.top_left_offset[0] + relative_position[0], self.top_left_offset[1] + relative_position[1])
             if absolute_position[0] < 0:
-                raise OverflowError(f"absolute x position can't be negative, {top_left_offset[0]} + {relative_position[0]}")
+                raise OverflowError(f"absolute x position can't be negative, {self.top_left_offset[0]} + {relative_position[0]}")
             if absolute_position[1] < 0:
-                raise OverflowError(f"absolute y position can't be negative, {top_left_offset[1]} + {relative_position[1]}")
+                raise OverflowError(f"absolute y position can't be negative, {self.top_left_offset[1]} + {relative_position[1]}")
             return absolute_position
         return list(map(
             make_absolute_position,
-            relative_positions
+            self.relative_positions
         ))
 
     def get_object_kind(self) -> ObjectKind:
@@ -99,5 +95,5 @@ class Object:
         return f"{self.colour}:{json_encoded_relative_positions}"
 
     def __repr__(self):
-        absolute_positions = Object.convert_to_absolute_positions(self.top_left_offset, self.relative_positions)
+        absolute_positions = self.convert_to_absolute_positions()
         return f"(Object colour: {colour_names[self.colour]}, positions: {absolute_positions}, depth: {self.depth})"

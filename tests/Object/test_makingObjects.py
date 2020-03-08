@@ -36,6 +36,12 @@ class TestMakingObjects(unittest.TestCase):
             (1, 2)
         ]
 
+        obj = Object(
+            1,
+            (1, 1),
+            relative_positions
+        )
+
         self.assertEqual(
             [
                 (0, 1),
@@ -45,7 +51,7 @@ class TestMakingObjects(unittest.TestCase):
                 (2, 2),
                 (2, 3),
             ],
-            Object.convert_to_absolute_positions((1, 1), relative_positions)
+            obj.convert_to_absolute_positions()
         )
 
 
