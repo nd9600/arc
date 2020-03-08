@@ -105,31 +105,6 @@ class TestRotatingObjects(unittest.TestCase):
             rotated_obj.relative_positions
         )
 
-    def test_rotating_l_shape_45_degrees_(self):
-        obj = Object(
-            1,
-            (1, 0),
-            [
-                (0, 0),
-                (1, 1),
-                (2, 2),
-                (1, 3),
-            ]
-        )
-
-        rotated_obj = UsefulFunctions.compose(
-            [
-                ObjectRuntime.rotate_object_45,
-                # ObjectRuntime.rotate_object_45,
-            ]
-        )(obj)
-        # self.assertEqual(
-        #     obj.relative_positions,
-        #     rotated_obj.relative_positions
-        # )
-        ObjectRuntime.crop_frame_model_to_objects([obj], 0).to_grid().plot()
-        ObjectRuntime.crop_frame_model_to_objects([rotated_obj], 0).to_grid().plot()
-
 
 if __name__ == '__main__':
     unittest.main()

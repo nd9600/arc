@@ -77,12 +77,6 @@ def crop_frame_model_to_objects(objects: List[Object.Object], background_colour:
 
 
 def rotate_object_about_point(obj: Object.Object, angle: int, about_point) -> Object.Object:
-    def round_half_up(n):
-        return math.floor(n + 0.5)
-
-    def round_half_down(n):
-        return math.ceil(n - 0.5)
-
     def rotate(point: RelativePosition, radian_angle: float, origin: AbsolutePosition = (0, 0)):
         """
         Rotate a point counterclockwise by a given angle around a given origin.
@@ -94,10 +88,8 @@ def rotate_object_about_point(obj: Object.Object, angle: int, about_point) -> Ob
 
         qx = ox + math.cos(radian_angle) * (px - ox) - math.sin(radian_angle) * (py - oy)
         qy = oy + math.sin(radian_angle) * (px - ox) + math.cos(radian_angle) * (py - oy)
-        print((qx), (qy))
-        rounded_qx = math.floor(qx) if qx > 0 else math.ceil(qx)
-        rounded_qy = math.floor(qy) if qy > 0 else math.ceil(qy)
-        return rounded_qx, rounded_qy
+        # we need to round them because we'd return stuff like (6.123233995736766e-17, 1.0) otherwise
+        return round(qx), round(qy)
 
     angle_in_radians = (angle) * math.pi/180
     rotated_relative_positions = list(map(
