@@ -92,13 +92,13 @@ class TestGroupingSameObjects(unittest.TestCase):
             actual_object_group
         )
 
-    def test_grouping_two_objects_where_one_is_rotated(self):
-        raise AssertionError("can't group a rotated object with an unrotated one, because rotation isn't taken into account for object similarity")
+    def test_grouping_two_objects_where_one_is_rotated_270_degrees(self):
         g = [
-            [0, 1, 1],
-            [0, 0, 0],
-            [0, 1, 0],
-            [0, 1, 0],
+            [0, 1, 1, 1],
+            [0, 0, 0, 1],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [1, 1, 0, 0],
         ]
         obj_a = Object(
             1,
@@ -106,6 +106,8 @@ class TestGroupingSameObjects(unittest.TestCase):
             [
                 (0, 0),
                 (1, 0),
+                (2, 0),
+                (2, 1),
             ],
             0
         )
@@ -113,14 +115,16 @@ class TestGroupingSameObjects(unittest.TestCase):
             1,
             (2, 3),
             [
-                (0, 0),
-                (0, 1),
+                (1, 0),
+                (1, 1),
+                (1, 2),
+                (0, 2),
             ],
             1
         )
         frame_model = FrameModel(
+            5,
             4,
-            3,
             0,
             [
                 obj_a,

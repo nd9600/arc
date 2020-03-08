@@ -19,18 +19,27 @@ def are_objects_the_same(a: Object.Object, b: Object.Object) -> bool:
     if a_colour != b_colour:
         return False
 
-    a_relative_positions = list(map(
+    # we convert to sets so that the order of the relative_positions doesn't matter
+    a_relative_positions = set(map(
         lambda position: (position[0], position[1]),
         json.loads(a_relative_positions_string)
     ))
-    b_relative_positions = list(map(
+    b_relative_positions = set(map(
         lambda position: (position[0], position[1]),
         json.loads(b_relative_positions_string)
     ))
-    if a_relative_positions != b_relative_positions:  # todo: won't recognise objects as the same if one is rotated
-        return False
 
-    return True
+    b_rotated_90: Object.Object = relatively_rotate_object_90(b)
+    b_rotated_180: Object.Object = relatively_rotate_object_180(b)
+    b_rotated_270: Object.Object = relatively_rotate_object_270(b)
+
+    relative_positions_are_the_same_after_some_rotation = (
+        a_relative_positions == b_relative_positions
+        or a_relative_positions == set(b_rotated_90.relative_positions)
+        or a_relative_positions == set(b_rotated_180.relative_positions)
+        or a_relative_positions == set(b_rotated_270.relative_positions)
+    )
+    return relative_positions_are_the_same_after_some_rotation
 
 
 def crop_frame_model_to_objects(objects: List[Object.Object], background_colour: int = 0) -> "src.FrameModel.FrameModel.FrameModel":
