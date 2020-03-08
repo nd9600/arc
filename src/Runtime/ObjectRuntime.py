@@ -6,7 +6,7 @@ import math
 
 import src.FrameModel.FrameModel
 import src.FrameModel.Object as Object
-from Types import AbsolutePosition
+from src.Types import AbsolutePosition
 
 
 def are_objects_the_same(a: Object.Object, b: Object.Object) -> bool:
