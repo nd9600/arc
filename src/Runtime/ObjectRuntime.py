@@ -6,7 +6,7 @@ import src.FrameModel.Object as Object
 import src.Runtime.GeometryRuntime as GeometryRuntime
 
 
-def are_objects_the_same(a: Object.Object, b: Object.Object) -> bool:
+def are_objects_the_same_kind(a: Object.Object, b: Object.Object) -> bool:
     a_kind = a.get_object_kind()
     b_kind = b.get_object_kind()
 
@@ -37,6 +37,15 @@ def are_objects_the_same(a: Object.Object, b: Object.Object) -> bool:
         or a_relative_positions == set(b_rotated_270.relative_positions)
     )
     return relative_positions_are_the_same_after_some_rotation
+
+
+def are_objects_the_same_instance(a: Object.Object, b: Object.Object) -> bool:
+    return (
+        a.colour == b.colour
+        and a.top_left_offset == b.top_left_offset
+        and a.depth == b.depth
+        and set(a.relative_positions) == set(b.relative_positions)
+    )
 
 
 def crop_frame_model_to_objects(objects: List[Object.Object], background_colour: int = 0) -> "src.FrameModel.FrameModel.FrameModel":
@@ -80,4 +89,26 @@ def crop_frame_model_to_objects(objects: List[Object.Object], background_colour:
         number_of_columns,
         background_colour,
         objects
+    )
+
+
+def match_objects_in_second_frame_to_those_in_first(
+    original_frame_model: "src.FrameModel.FrameModel.FrameModel",
+    second_frame_model: "src.FrameModel.FrameModel.FrameModel"
+) -> "src.FrameModel.FrameModel.FrameModel":
+
+    matched_objects_in_second_frame = []
+    for second_obj in second_frame_model.objects.values():
+        for original_obj in original_frame_model.objects.values():
+            if are_objects_the_same_instance(original_obj, second_obj):
+                second_obj.id = original_obj.id
+                break
+        matched_objects_in_second_frame.append(second_obj)
+
+    return src.FrameModel.FrameModel.FrameModel(
+        second_frame_model.number_of_rows,
+        second_frame_model.number_of_columns,
+        second_frame_model.background_colour,
+        matched_objects_in_second_frame,
+        second_frame_model.agents,
     )

@@ -16,13 +16,13 @@ class FrameModel:
         number_of_columns: int,
         background_colour: int,
         objects: Union[List[Object], Dict[int, Object]],
-        agents: List = []
+        agents: List = None
     ):
         self.number_of_rows = number_of_rows
         self.number_of_columns = number_of_columns
         self.background_colour = background_colour
-        self.objects = {obj.id: obj for obj in objects} if (isinstance(objects, list)) else objects
-        self.agents = agents
+        self.objects: Dict[int, Object] = {obj.id: obj for obj in objects} if (isinstance(objects, list)) else objects
+        self.agents = agents if agents is not None else []
 
     @staticmethod
     def create_from_grid(grid: Grid) -> "FrameModel":
@@ -90,7 +90,7 @@ class FrameModel:
 
             for obj_b_index in range(obj_a_index + 1, len(ungrouped_objects)):
                 obj_b = ungrouped_objects[obj_b_index]
-                if ObjectRuntime.are_objects_the_same(obj_a, obj_b):
+                if ObjectRuntime.are_objects_the_same_kind(obj_a, obj_b):
                     grouped_objects[obj_kind].append(obj_b.id)
             obj_a_index = obj_a_index + 1
         return dict(grouped_objects)
