@@ -1,6 +1,7 @@
 import unittest
 
 import src.Runtime.ObjectRuntime as ObjectRuntime
+import src.Runtime.GeometryRuntime as GeometryRuntime
 import src.UsefulFunctions as UsefulFunctions
 from src.FrameModel.Object import Object
 
@@ -16,7 +17,7 @@ class TestRotatingObjects(unittest.TestCase):
                 (2, 0),
             ]
         )
-        rotated_obj: Object = ObjectRuntime.relatively_rotate_object_90(obj)
+        rotated_obj: Object = GeometryRuntime.relatively_rotate_object_90(obj)
         self.assertEqual(
             [
                 (0, 0),
@@ -38,7 +39,7 @@ class TestRotatingObjects(unittest.TestCase):
             ]
         )
         rotated_obj: Object = UsefulFunctions.compose([
-            ObjectRuntime.relatively_rotate_object_270,
+            GeometryRuntime.relatively_rotate_object_270,
         ])(obj)
         self.assertEqual(
             (1, 0),
@@ -66,7 +67,7 @@ class TestRotatingObjects(unittest.TestCase):
             ]
         )
 
-        rotated_obj: Object = ObjectRuntime.absolutely_rotate_object_270((1, 0), obj)
+        rotated_obj: Object = GeometryRuntime.absolutely_rotate_object_270((1, 0), obj)
         self.assertEqual(
             (1, 0),
             rotated_obj.top_left_offset
@@ -93,7 +94,7 @@ class TestRotatingObjects(unittest.TestCase):
             ]
         )
 
-        rotated_obj: Object = ObjectRuntime.absolutely_rotate_object_270((5, 5), obj)
+        rotated_obj: Object = GeometryRuntime.absolutely_rotate_object_270((5, 5), obj)
         self.assertEqual(
             (5, 3),
             rotated_obj.top_left_offset
@@ -120,7 +121,7 @@ class TestRotatingObjects(unittest.TestCase):
             ]
         )
 
-        rotated_obj: Object = ObjectRuntime.relatively_rotate_object_270(obj)
+        rotated_obj: Object = GeometryRuntime.relatively_rotate_object_270(obj)
         self.assertEqual(
             (5, 3),
             rotated_obj.top_left_offset
@@ -146,7 +147,7 @@ class TestRotatingObjects(unittest.TestCase):
                 (2, 1),
             ]
         )
-        rotated_obj: Object = UsefulFunctions.compose([ObjectRuntime.relatively_rotate_object_90])(obj)
+        rotated_obj: Object = UsefulFunctions.compose([GeometryRuntime.relatively_rotate_object_90])(obj)
         # the top left offset had to be shifted to accommodate the L being 2 squares wide
         self.assertEqual(
             (8, 3),
@@ -174,7 +175,7 @@ class TestRotatingObjects(unittest.TestCase):
             ]
         )
 
-        rotated_obj: Object = ObjectRuntime.relatively_rotate_object(360, obj)
+        rotated_obj: Object = GeometryRuntime.relatively_rotate_object(360, obj)
         self.assertEqual(
             obj.top_left_offset,
             rotated_obj.top_left_offset
@@ -202,10 +203,10 @@ class TestRotatingObjects(unittest.TestCase):
 
         rotated_obj = UsefulFunctions.compose(
             [
-                ObjectRuntime.relatively_rotate_object_90,
-                ObjectRuntime.relatively_rotate_object_90,
-                ObjectRuntime.relatively_rotate_object_90,
-                ObjectRuntime.relatively_rotate_object_90
+                GeometryRuntime.relatively_rotate_object_90,
+                GeometryRuntime.relatively_rotate_object_90,
+                GeometryRuntime.relatively_rotate_object_90,
+                GeometryRuntime.relatively_rotate_object_90
             ]
         )(obj)
         self.assertEqual(

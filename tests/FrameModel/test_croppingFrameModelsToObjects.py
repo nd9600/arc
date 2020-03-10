@@ -1,6 +1,6 @@
 import unittest
 
-import src.Runtime.ObjectRuntime
+import src.Runtime.ObjectRuntime as ObjectRuntime
 from src.FrameModel.Object import Object
 
 
@@ -18,7 +18,7 @@ class TestCroppingFrameModelsToObjects(unittest.TestCase):
             ],
         )
 
-        frame_model = src.Runtime.ObjectRuntime.crop_frame_model_to_objects([obj], 0)
+        frame_model = ObjectRuntime.crop_frame_model_to_objects([obj], 0)
         self.assertEqual(
             3,
             frame_model.number_of_rows
@@ -58,7 +58,7 @@ class TestCroppingFrameModelsToObjects(unittest.TestCase):
                 (0, 4),
             ],
         )
-        frame_model = src.Runtime.ObjectRuntime.crop_frame_model_to_objects([obj], 0)
+        frame_model = ObjectRuntime.crop_frame_model_to_objects([obj], 0)
         self.assertEqual(
             5,
             frame_model.number_of_rows
@@ -108,7 +108,7 @@ class TestCroppingFrameModelsToObjects(unittest.TestCase):
             ],
         )
 
-        frame_model = src.Runtime.ObjectRuntime.crop_frame_model_to_objects([obj_a, obj_b], 0)
+        frame_model = ObjectRuntime.crop_frame_model_to_objects([obj_a, obj_b], 0)
         self.assertEqual(
             3,
             frame_model.number_of_rows
