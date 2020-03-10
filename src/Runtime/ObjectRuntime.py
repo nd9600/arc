@@ -1,8 +1,7 @@
-from typing import List, Tuple
-from functools import partial
-
 import json
 import math
+from functools import partial
+from typing import List, Tuple
 
 import src.FrameModel.FrameModel
 import src.FrameModel.Object as Object

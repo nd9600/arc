@@ -1,8 +1,7 @@
 import unittest
 
-import UsefulFunctions
 import src.Runtime.ObjectRuntime as ObjectRuntime
-from FrameModel.FrameModel import FrameModel
+import src.UsefulFunctions as UsefulFunctions
 from src.FrameModel.Object import Object
 
 
