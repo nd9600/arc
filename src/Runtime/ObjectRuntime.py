@@ -3,7 +3,7 @@ from typing import List
 
 import src.FrameModel.FrameModel
 import src.FrameModel.Object as Object
-import src.Runtime.GeometryRuntime as GeometryRuntime
+from src.Runtime import GeometryRuntime
 
 
 def are_objects_the_same_kind(a: Object.Object, b: Object.Object) -> bool:
@@ -54,9 +54,9 @@ def crop_frame_model_to_objects(objects: List[Object.Object], background_colour:
     min_top_left_x = 32
     min_top_left_y = 32
 
-    # also calculates the max x and y offsets, used to find the numbers of rows and columns needed
-    max_x_offset = 0
-    max_y_offset = 0
+    # also calculates the max x and y absolute positions, used to find the numbers of rows and columns needed
+    max_x = 0
+    max_y = 0
 
     for obj in objects:
         if obj.top_left_offset[0] < min_top_left_x:
@@ -64,26 +64,30 @@ def crop_frame_model_to_objects(objects: List[Object.Object], background_colour:
         if obj.top_left_offset[1] < min_top_left_y:
             min_top_left_y = obj.top_left_offset[1]
 
-        obj_max_x_offset = max(list(map(
+        obj_max_x = obj.top_left_offset[0] + max(list(map(
             lambda pos: pos[0],
             obj.relative_positions
         )))
-        if obj_max_x_offset > max_x_offset:
-            max_x_offset = obj_max_x_offset
+        if obj_max_x > max_x:
+            max_x = obj_max_x
 
-        obj_max_y_offset = max(list(map(
+        obj_max_y = obj.top_left_offset[1] + max(list(map(
             lambda pos: pos[1],
             obj.relative_positions
         )))
-        if obj_max_y_offset > max_y_offset:
-            max_y_offset = obj_max_y_offset
+        if obj_max_y > max_y:
+            max_y = obj_max_y
 
+    # converts all the objects' top left offsets relative to the the min top left offset
     for i, obj in enumerate(objects):
         obj.top_left_offset = (obj.top_left_offset[0] - min_top_left_x, obj.top_left_offset[1] - min_top_left_y)
         objects[i] = obj
 
-    number_of_rows = max_y_offset + 1  # if the only relative_position is (0, 0), the object is 1x1
-    number_of_columns = max_x_offset + 1
+    max_y_distance = max_y - min_top_left_y
+    number_of_rows = max_y_distance + 1 # if the only relative_position is (0, 0), the object is 1x1
+
+    max_x_distance = max_x - min_top_left_x
+    number_of_columns = max_x_distance + 1
     return src.FrameModel.FrameModel.FrameModel(
         number_of_rows,
         number_of_columns,

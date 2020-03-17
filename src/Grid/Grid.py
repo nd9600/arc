@@ -99,7 +99,7 @@ class Grid:
             for x, squareColour in enumerate(row):
                 current_position = (x, y)
                 if (
-                    squareColour == 0
+                    squareColour == 0 # todo: assumes background is always black
                     or current_position in seen_positions
                 ):
                     continue

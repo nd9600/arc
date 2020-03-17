@@ -1,7 +1,9 @@
 import math
+from collections import deque
 from functools import partial
-from typing import Tuple
+from typing import Tuple, Deque, Set
 
+import src.FrameModel.FrameModel
 import src.FrameModel.Object as Object
 from src.Types import AbsolutePosition
 
@@ -121,3 +123,50 @@ relatively_rotate_object_270 = partial(relatively_rotate_object, 270)
 absolutely_rotate_object_90 = partial(absolutely_rotate_object, 90)
 absolutely_rotate_object_180 = partial(absolutely_rotate_object, 180)
 absolutely_rotate_object_270 = partial(absolutely_rotate_object, 270)
+
+
+def is_point_fully_enclosed(
+    point: AbsolutePosition,
+    frame_model: "src.FrameModel.FrameModel.FrameModel"
+) -> bool:
+    if (
+        point[0] < 0 or point[0] >= frame_model.number_of_columns
+        or point[1] < 0 or point[1] >= frame_model.number_of_rows
+    ):
+        raise OverflowError(f"point is off the grid, ({point[0]}, {point[1]})")
+
+    grid = frame_model.to_grid()
+
+    # the point must not be an object
+    if grid.get_colour(point[0], point[1]) != frame_model.background_colour:
+        return False
+
+    seen_positions: Set[AbsolutePosition] = set()
+    positions_to_check: Deque[AbsolutePosition] = deque()
+    positions_to_check.append(point)
+    while (len(positions_to_check)) > 0:
+        current_position = positions_to_check.pop()
+        seen_positions.add(current_position)
+
+        x = current_position[0]
+        y = current_position[1]
+        neighbourhood = grid.get_neighbourhood(x, y)
+
+        # if any neighbour is the background, return False
+        for neighbour in neighbourhood:
+            neighbour_is_on_the_border = ((neighbour[0] <= 0 or neighbour[0] >= frame_model.number_of_columns - 1)
+                or (neighbour[1] <= 0 or neighbour[1] >= frame_model.number_of_rows - 1))
+            neighbour_is_background = grid.get_colour(neighbour[0], neighbour[1]) == frame_model.background_colour
+            if neighbour_is_on_the_border and neighbour_is_background:
+                return False
+
+        # add all neighbours that aren't the background to the queue, if we haven't seen them yet
+        neighbouring_squares_that_arent_the_background = list(filter(
+            lambda pos: grid.get_colour(pos[0], pos[1]) == frame_model.background_colour,
+            neighbourhood
+        ))
+        for neighbour in neighbouring_squares_that_arent_the_background:
+            if neighbour not in seen_positions:
+                positions_to_check.append(neighbour)
+
+    return True

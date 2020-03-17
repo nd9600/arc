@@ -3,7 +3,7 @@ from typing import List, Dict, Union
 
 import numpy as np
 
-import src.Runtime.ObjectRuntime as ObjectRuntime
+from src.Runtime import ObjectRuntime
 from src.FrameModel.Object import Object
 from src.Grid.Grid import Grid
 from src.Types import Row, ObjectId, ObjectKind
