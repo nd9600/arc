@@ -116,3 +116,7 @@ def match_objects_in_second_frame_to_those_in_first(
         matched_objects_in_second_frame,
         second_frame_model.agents,
     )
+
+
+def get_size(obj: Object.Object) -> int:
+    return len(obj.relative_positions)
