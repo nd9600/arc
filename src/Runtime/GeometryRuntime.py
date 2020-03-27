@@ -1,7 +1,7 @@
 import math
 from collections import deque
 from functools import partial
-from typing import Tuple, Deque, Set
+from typing import Tuple, Deque, Set, List
 
 import src.FrameModel.FrameModel
 import src.FrameModel.Object as Object
@@ -170,3 +170,76 @@ def is_point_fully_enclosed(
                 positions_to_check.append(neighbour)
 
     return True
+
+
+def points_contained_by_object(
+    obj: Object.Object,
+    frame_model: "src.FrameModel.FrameModel.FrameModel"
+) -> List[AbsolutePosition]:
+    obj_min_x = obj.top_left_offset[0] + min(list(map(
+        lambda pos: pos[0],
+        obj.relative_positions
+    )))
+    obj_max_x = obj.top_left_offset[0] + max(list(map(
+        lambda pos: pos[0],
+        obj.relative_positions
+    )))
+
+    obj_min_y = obj.top_left_offset[0] + min(list(map(
+        lambda pos: pos[1],
+        obj.relative_positions
+    )))
+    obj_max_y = obj.top_left_offset[0] + max(list(map(
+        lambda pos: pos[1],
+        obj.relative_positions
+    )))
+
+    grid = frame_model.to_grid()
+    objs_positions = set(obj.convert_to_absolute_positions())
+    contained_points = []
+
+    seen_positions: Set[AbsolutePosition] = set()
+    positions_that_have_neighbours_out_of_bounds: Set[AbsolutePosition] = set()
+    """
+    a point p is contained by an object o if it's not possible to go outside of o's min or max x or y using 
+    neighbouring free squares or objects (this includes neighbours of neighbours, etc.) - the positions mustn't already
+    be a part of object o 
+    """
+    for x in range(obj_min_x, obj_max_x + 1):
+        for y in range(obj_min_y, obj_max_y + 1):
+            if (x, y) in objs_positions: # a part of the object definitely isn't contained _in_ the object
+                continue
+
+            possible_positions_that_could_have_out_of_bounds_neighbours: Deque[AbsolutePosition] = deque()
+            possible_positions_that_could_have_out_of_bounds_neighbours.append((x, y))
+            neighbours_that_are_out_of_bounds = set()
+            while (len(possible_positions_that_could_have_out_of_bounds_neighbours)) > 0:
+                possible_pos = possible_positions_that_could_have_out_of_bounds_neighbours.pop()
+                seen_positions.add(possible_pos)
+
+                possible_x = possible_pos[0]
+                possible_y = possible_pos[1]
+                neighbourhood = grid.get_neighbourhood(possible_x, possible_y)
+                neighbourhood_not_this_obj = list(filter(
+                    lambda pos: (pos[0], pos[1]) not in objs_positions,
+                    neighbourhood
+                ))
+
+                for neighbour in neighbourhood_not_this_obj:
+                    neighbour_x = neighbour[0]
+                    neighbour_y = neighbour[1]
+                    neighbour_is_outside_of_object_bounds = (
+                            (neighbour_x < obj_min_x or neighbour_x > obj_max_x)
+                            or (neighbour_y < obj_min_y or neighbour_y > obj_max_y)
+                    )
+                    neighbour_has_its_own_neighbours_out_of_bounds = neighbour in positions_that_have_neighbours_out_of_bounds
+                    if neighbour_is_outside_of_object_bounds or neighbour_has_its_own_neighbours_out_of_bounds:
+                        neighbours_that_are_out_of_bounds.add(neighbour)
+                    elif neighbour not in seen_positions:
+                        possible_positions_that_could_have_out_of_bounds_neighbours.append(neighbour)
+
+            if len(neighbours_that_are_out_of_bounds) == 0:
+                contained_points.append((x, y))
+            else:
+                positions_that_have_neighbours_out_of_bounds.add((x, y))
+    return contained_points
