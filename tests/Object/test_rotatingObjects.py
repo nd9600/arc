@@ -1,6 +1,5 @@
 import unittest
 
-import src.Runtime.ObjectRuntime as ObjectRuntime
 import src.Runtime.GeometryRuntime as GeometryRuntime
 import src.UsefulFunctions as UsefulFunctions
 from src.FrameModel.Object import Object

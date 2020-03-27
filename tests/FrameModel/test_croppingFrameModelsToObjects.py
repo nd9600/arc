@@ -18,7 +18,7 @@ class TestCroppingFrameModelsToObjects(unittest.TestCase):
             ],
         )
 
-        frame_model = ObjectRuntime.crop_frame_model_to_objects([obj], 0)
+        frame_model = ObjectRuntime.make_frame_model_from_objects([obj], 0)
         self.assertEqual(
             3,
             frame_model.number_of_rows
@@ -57,7 +57,7 @@ class TestCroppingFrameModelsToObjects(unittest.TestCase):
                 (0, 4),
             ],
         )
-        frame_model = ObjectRuntime.crop_frame_model_to_objects([obj], 0)
+        frame_model = ObjectRuntime.make_frame_model_from_objects([obj], 0)
         self.assertEqual(
             5,
             frame_model.number_of_rows
@@ -107,7 +107,7 @@ class TestCroppingFrameModelsToObjects(unittest.TestCase):
             ],
         )
 
-        frame_model = ObjectRuntime.crop_frame_model_to_objects([obj_a, obj_b], 0)
+        frame_model = ObjectRuntime.make_frame_model_from_objects([obj_a, obj_b], 0)
         self.assertEqual(
             3,
             frame_model.number_of_rows
@@ -157,7 +157,7 @@ class TestCroppingFrameModelsToObjects(unittest.TestCase):
             (2, 2),
             relative_positions
         )
-        frame_model = ObjectRuntime.crop_frame_model_to_objects([obj_a, obj_b], 0)
+        frame_model = ObjectRuntime.make_frame_model_from_objects([obj_a, obj_b], 0)
         self.assertEqual(
             5,
             frame_model.number_of_rows

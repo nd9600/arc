@@ -48,7 +48,11 @@ def are_objects_the_same_instance(a: Object.Object, b: Object.Object) -> bool:
     )
 
 
-def crop_frame_model_to_objects(objects: List[Object.Object], background_colour: int = 0) -> "src.FrameModel.FrameModel.FrameModel":
+def make_frame_model_from_objects(
+        objects: List[Object.Object],
+        background_colour: int = 0,
+        should_crop_to_objects: bool = True
+) -> "src.FrameModel.FrameModel.FrameModel":
     # finds the top left offset that is the the left of and above all objects,
     # and converts all the objects' top left offsets relative to that
     min_top_left_x = 32
@@ -78,15 +82,19 @@ def crop_frame_model_to_objects(objects: List[Object.Object], background_colour:
         if obj_max_y > max_y:
             max_y = obj_max_y
 
-    # converts all the objects' top left offsets relative to the the min top left offset
-    for i, obj in enumerate(objects):
-        obj.top_left_offset = (obj.top_left_offset[0] - min_top_left_x, obj.top_left_offset[1] - min_top_left_y)
-        objects[i] = obj
+    if should_crop_to_objects:
+        # converts all the objects' top left offsets relative to the the min top left offset
+        for i, obj in enumerate(objects):
+            obj.top_left_offset = (obj.top_left_offset[0] - min_top_left_x, obj.top_left_offset[1] - min_top_left_y)
+            objects[i] = obj
 
-    max_y_distance = max_y - min_top_left_y
-    number_of_rows = max_y_distance + 1 # if the only relative_position is (0, 0), the object is 1x1
+        max_y_distance = max_y - min_top_left_y
+        max_x_distance = max_x - min_top_left_x
 
-    max_x_distance = max_x - min_top_left_x
+    else:
+        max_y_distance = max_y
+        max_x_distance = max_x
+    number_of_rows = max_y_distance + 1  # if the only relative_position is (0, 0), the object is 1x1
     number_of_columns = max_x_distance + 1
     return src.FrameModel.FrameModel.FrameModel(
         number_of_rows,

@@ -24,7 +24,7 @@ class TestEnclosure(unittest.TestCase):
             (0, 0),
             relative_positions
         )
-        frame_model = ObjectRuntime.crop_frame_model_to_objects([obj], 0)
+        frame_model = ObjectRuntime.make_frame_model_from_objects([obj], 0)
 
         for pos in relative_positions:
             self.assertFalse(GeometryRuntime.is_point_fully_enclosed(pos, frame_model))
@@ -57,7 +57,7 @@ class TestEnclosure(unittest.TestCase):
             (2, 2),
             relative_positions
         )
-        frame_model = ObjectRuntime.crop_frame_model_to_objects([obj_a, obj_b], 0)
+        frame_model = ObjectRuntime.make_frame_model_from_objects([obj_a, obj_b], 0)
         # frame_model.to_grid().plot()
 
         self.assertFalse(GeometryRuntime.is_point_fully_enclosed((0, 0), frame_model))
