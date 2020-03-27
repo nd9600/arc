@@ -62,6 +62,13 @@ class FrameModel:
                     grid.set_colour(absolute_position[0], absolute_position[1], obj.colour)
         return grid
 
+
+    def get_object(self, id: int) -> Object:
+        return self.objects[id]
+
+    def objects_as_list(self) -> List[Object]:
+        return list(self.objects.values())
+
     def group_same_objects(self) -> Dict[ObjectKind, List[ObjectId]]:
         grouped_objects: Dict[ObjectKind, List[ObjectId]] = defaultdict(list)
 

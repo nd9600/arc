@@ -42,8 +42,22 @@ class TestRuntimeCombinations(unittest.TestCase):
         frame_model = ObjectRuntime.make_frame_model_from_objects([obj_a, obj_b, obj_c], 0)
 
         # get list of objects
+        # find id of biggest object
         #
-        new_frame_model = FrameModelRuntime.change_objects(frame_model, [obj_b])
+        biggest_object = ListRuntime.map_list(
+            lambda obj: (obj.id, ObjectRuntime.get_size(obj)),
+            frame_model.objects_as_list()
+        )
+        print("\n")
+        print(biggest_object)
+
+        new_frame_model = FrameModelRuntime.change_objects(
+            frame_model,
+            ListRuntime.filter_list(
+                lambda obj: obj == biggest_object,
+                frame_model.objects_as_list()
+            )
+        )
         new_frame_model.to_grid().plot()
         self.assertEqual(
             1,
